@@ -1,0 +1,59 @@
+<and>
+  <add>
+    <varstring name="CustomRuleData" scope="event"/>
+    <varstring name="ProcessThatHasOpenedASensitiveFile-Name" scope="global"/>
+  </add>
+  <set>
+    <varstring name="ProcessThatHasOpenedASensitiveFile-Name" scope="global"/>
+    <curProcessImageName/>
+  </set>
+  <set>
+    <varint name="ProcessThatHasOpenedASensitiveFile" scope="global"/>
+    <curProcessID/>
+  </set>
+  <not>
+    <in>
+      <curProcessImageName/>
+      <list>
+        <componentListString name="sensitive_file_screenshot_exclusions" choice="1" id="sensitive_file_screenshot_exclusions" label="Screenshot Exception Processes:" description="Please enter a list of processes to exclude from flagging sensitive document access (Required)"/>
+      </list>
+    </in>
+  </not>
+  <!-- BEGIN: Allow the DG admin to target specific tags by parameterizing the rule. This code is not in a Component Rule to enable per-rule parameterization -->
+  <or>
+    <and>
+      <or>
+        <in op="like">
+          <evtDestFilePolicyTag/>
+          <list>
+            <varstring name="tagarray" scope="event"/>
+          </list>
+        </in>
+        <in op="like">
+          <evtSrcFilePolicyTag/>
+          <list>
+            <varstring name="tagarray" scope="event"/>
+          </list>
+        </in>
+      </or>
+      <function name="DG_StrTok">
+        <parameters>
+          <string value="%" id="tagstring"/>
+          <string value=","/>
+          <varstring name="tagarray" scope="event" out="1"/>
+        </parameters>
+      </function>
+    </and>
+    <equal>
+      <string value="%" id="tagstring" choice="1" label="Classification tags:" description="For this rule to target specific classification tags, enter a comma-separated list of tags with no spaces between them. You can optionally place a '%' wildcard to the left, to the right or on both sides of each tag. A single '%' targets any tag."/>
+      <string value="%"/>
+    </equal>
+  </or>
+  <!-- END: Allow the DG admin to target specific tags by parameterizing the rule. This code is not in a Component Rule to enable per-rule parameterization -->
+  <in>
+    <evtOperationType/>
+    <list>
+      <constOpFileRead/>
+    </list>
+  </in>
+</and>
