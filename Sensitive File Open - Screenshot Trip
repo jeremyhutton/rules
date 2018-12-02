@@ -1,0 +1,26 @@
+<and>
+  <return>
+    <!-- Exit the rule and return the value of this variable. If the variable is false the rule aborts. -->
+    <varbool name="ProcessActive" scope="event"/>
+  </return>
+  <set>
+    <varstring name="CustomRuleData" scope="event"/>
+    <varstring name="ProcessThatHasOpenedASensitiveFile-Name" scope="global"/>
+  </set>
+  <function name="DG_IsProcessActive">
+    <parameters>
+      <varint name="ProcessThatHasOpenedASensitiveFile" scope="global"/>
+    </parameters>
+    <return>
+      <varbool name="ProcessActive" scope="event"/>
+    </return>
+  </function>
+  <in>
+    <evtOperationType/>
+    <list>
+      <constOpAdeScreenCapture />
+      <constOpAdePrintScreen/>
+      <constOpAdePrintProcess/>
+    </list>
+  </in>
+</and>
